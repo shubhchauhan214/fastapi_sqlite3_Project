@@ -1,6 +1,6 @@
 from typing import Annotated
 from sqlalchemy.orm import Session
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 import models
 from models import Students
 from database import engine, SessionLocal
@@ -27,7 +27,10 @@ async def students(db: db_dependency):
     return db.query(Students).all()
 
 
-# # Get content using id
-# @app.get("/student/{student_id}")
-# async def student_by_id(db:db_dependency, student_id: int):
-#     student_model = db.query(School).filter(School.id == )
+# Read content using id
+@app.get("/student/{student_id}")
+async def student_by_id(db:db_dependency, student_id: int):
+    student_model = db.query(Students).filter(Students.id == student_id).first()
+    if student_model is not None:
+        return student_model
+    raise HTTPException(status_code=404, detail='Student not found.')

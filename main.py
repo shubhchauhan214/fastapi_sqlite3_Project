@@ -57,8 +57,8 @@ async def new_student(db: db_dependency, student_request: StudentRequest):
 # PUT Request Method
 @app.put("/student/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_student(db: db_dependency,
-                         student_id: int,
-                         student_request: StudentRequest):
+                         student_request: StudentRequest,
+                         student_id: int = Path(gt=0)):
     student_model = db.query(Students).filter(Students.id == student_id).first()
     if student_model is None:
         raise HTTPException(status_code=404, detail='Student not found')

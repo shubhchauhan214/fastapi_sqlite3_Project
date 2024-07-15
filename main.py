@@ -71,3 +71,15 @@ async def update_student(db: db_dependency,
     db.commit()
 
 
+# DELETE Method
+@app.delete("/student/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_student(db: db_dependency, student_id: int = Path(gt=0)):
+    student_model = db.query(Students).filter(Students.id == student_id).first()
+    if student_model is None:
+        raise HTTPException(status_code=404, detail='Student not found')
+    db.query(Students).filter(Students.id == student_id).delete()
+
+    db.commit()
+
+
+
